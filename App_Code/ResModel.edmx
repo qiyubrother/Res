@@ -1,0 +1,545 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ResModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Resource">
+          <Key>
+            <PropertyRef Name="ResourceId" />
+          </Key>
+          <Property Name="ResourceId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ResourceTitle" Type="nvarchar" MaxLength="100" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="ResourceSubGroupId" Type="nvarchar" MaxLength="10" />
+          <Property Name="TotalClick" Type="int" />
+        </EntityType>
+        <EntityType Name="ResourceClick">
+          <Key>
+            <PropertyRef Name="ResouceId" />
+            <PropertyRef Name="ClickDate" />
+          </Key>
+          <Property Name="ResouceId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ResourceClick" Type="bigint" />
+          <Property Name="ClickDate" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResourceGroup">
+          <Key>
+            <PropertyRef Name="ResourceGroupId" />
+          </Key>
+          <Property Name="ResourceGroupId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ResourceGroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResourceGroupTotalClick">
+          <Key>
+            <PropertyRef Name="ResourceId" />
+            <PropertyRef Name="ResourceGoupId" />
+          </Key>
+          <Property Name="ResourceId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ResourceGoupId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="GroupTotalClick" Type="bigint" />
+        </EntityType>
+        <EntityType Name="ResourceLink">
+          <Key>
+            <PropertyRef Name="ResourceId" />
+            <PropertyRef Name="SourceId" />
+          </Key>
+          <Property Name="ResourceId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SourceId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Link" Type="nvarchar" MaxLength="200" />
+          <Property Name="ResourceCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ResourceSearchKey">
+          <Key>
+            <PropertyRef Name="ResourceId" />
+            <PropertyRef Name="SearchKeyId" />
+          </Key>
+          <Property Name="ResourceId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SearchKeyId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResourceSubGroup">
+          <Key>
+            <PropertyRef Name="ResourceSubGroupId" />
+          </Key>
+          <Property Name="ResourceSubGroupId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ResourceGroupId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ResourceSubGroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SearchKey">
+          <Key>
+            <PropertyRef Name="SearchKeyId" />
+          </Key>
+          <Property Name="SearchKeyId" Type="int" Nullable="false" />
+          <Property Name="SearchKeyText" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="SourceId" />
+          </Key>
+          <Property Name="SourceId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Pos" Type="int" Nullable="false" />
+          <Property Name="SourceName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="nvarchar" MaxLength="10" />
+          <Property Name="IsPrimary" Type="nvarchar" MaxLength="1" />
+          <Property Name="IsDefault" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <Association Name="FK_Resource_ResourceSubGroup">
+          <End Role="ResourceSubGroup" Type="Self.ResourceSubGroup" Multiplicity="0..1" />
+          <End Role="Resource" Type="Self.Resource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceSubGroup">
+              <PropertyRef Name="ResourceSubGroupId" />
+            </Principal>
+            <Dependent Role="Resource">
+              <PropertyRef Name="ResourceSubGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceClick_Resource">
+          <End Role="Resource" Type="Self.Resource" Multiplicity="1" />
+          <End Role="ResourceClick" Type="Self.ResourceClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Resource">
+              <PropertyRef Name="ResourceId" />
+            </Principal>
+            <Dependent Role="ResourceClick">
+              <PropertyRef Name="ResouceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceGroupTotalClick_Resource">
+          <End Role="Resource" Type="Self.Resource" Multiplicity="1" />
+          <End Role="ResourceGroupTotalClick" Type="Self.ResourceGroupTotalClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Resource">
+              <PropertyRef Name="ResourceId" />
+            </Principal>
+            <Dependent Role="ResourceGroupTotalClick">
+              <PropertyRef Name="ResourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceLink_Resource">
+          <End Role="Resource" Type="Self.Resource" Multiplicity="1" />
+          <End Role="ResourceLink" Type="Self.ResourceLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Resource">
+              <PropertyRef Name="ResourceId" />
+            </Principal>
+            <Dependent Role="ResourceLink">
+              <PropertyRef Name="ResourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceLink_Source">
+          <End Role="Source" Type="Self.Source" Multiplicity="1" />
+          <End Role="ResourceLink" Type="Self.ResourceLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Source">
+              <PropertyRef Name="SourceId" />
+            </Principal>
+            <Dependent Role="ResourceLink">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceSearchKey_Resource">
+          <End Role="Resource" Type="Self.Resource" Multiplicity="1" />
+          <End Role="ResourceSearchKey" Type="Self.ResourceSearchKey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Resource">
+              <PropertyRef Name="ResourceId" />
+            </Principal>
+            <Dependent Role="ResourceSearchKey">
+              <PropertyRef Name="ResourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceSearchKey_SearchKey">
+          <End Role="SearchKey" Type="Self.SearchKey" Multiplicity="1" />
+          <End Role="ResourceSearchKey" Type="Self.ResourceSearchKey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchKey">
+              <PropertyRef Name="SearchKeyId" />
+            </Principal>
+            <Dependent Role="ResourceSearchKey">
+              <PropertyRef Name="SearchKeyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceSubGroup_ResourceGroup">
+          <End Role="ResourceGroup" Type="Self.ResourceGroup" Multiplicity="1" />
+          <End Role="ResourceSubGroup" Type="Self.ResourceSubGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceGroup">
+              <PropertyRef Name="ResourceGroupId" />
+            </Principal>
+            <Dependent Role="ResourceSubGroup">
+              <PropertyRef Name="ResourceGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ResModelStoreContainer">
+          <EntitySet Name="Resource" EntityType="Self.Resource" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceClick" EntityType="Self.ResourceClick" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceGroup" EntityType="Self.ResourceGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceGroupTotalClick" EntityType="Self.ResourceGroupTotalClick" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceLink" EntityType="Self.ResourceLink" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceSearchKey" EntityType="Self.ResourceSearchKey" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResourceSubGroup" EntityType="Self.ResourceSubGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchKey" EntityType="Self.SearchKey" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Source" EntityType="Self.Source" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Resource_ResourceSubGroup" Association="Self.FK_Resource_ResourceSubGroup">
+            <End Role="ResourceSubGroup" EntitySet="ResourceSubGroup" />
+            <End Role="Resource" EntitySet="Resource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceClick_Resource" Association="Self.FK_ResourceClick_Resource">
+            <End Role="Resource" EntitySet="Resource" />
+            <End Role="ResourceClick" EntitySet="ResourceClick" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceGroupTotalClick_Resource" Association="Self.FK_ResourceGroupTotalClick_Resource">
+            <End Role="Resource" EntitySet="Resource" />
+            <End Role="ResourceGroupTotalClick" EntitySet="ResourceGroupTotalClick" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceLink_Resource" Association="Self.FK_ResourceLink_Resource">
+            <End Role="Resource" EntitySet="Resource" />
+            <End Role="ResourceLink" EntitySet="ResourceLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceLink_Source" Association="Self.FK_ResourceLink_Source">
+            <End Role="Source" EntitySet="Source" />
+            <End Role="ResourceLink" EntitySet="ResourceLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceSearchKey_Resource" Association="Self.FK_ResourceSearchKey_Resource">
+            <End Role="Resource" EntitySet="Resource" />
+            <End Role="ResourceSearchKey" EntitySet="ResourceSearchKey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceSearchKey_SearchKey" Association="Self.FK_ResourceSearchKey_SearchKey">
+            <End Role="SearchKey" EntitySet="SearchKey" />
+            <End Role="ResourceSearchKey" EntitySet="ResourceSearchKey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceSubGroup_ResourceGroup" Association="Self.FK_ResourceSubGroup_ResourceGroup">
+            <End Role="ResourceGroup" EntitySet="ResourceGroup" />
+            <End Role="ResourceSubGroup" EntitySet="ResourceSubGroup" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ResModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ResEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Resource" EntityType="ResModel.Resource" />
+          <EntitySet Name="ResourceClick" EntityType="ResModel.ResourceClick" />
+          <EntitySet Name="ResourceGroup" EntityType="ResModel.ResourceGroup" />
+          <EntitySet Name="ResourceGroupTotalClick" EntityType="ResModel.ResourceGroupTotalClick" />
+          <EntitySet Name="ResourceLink" EntityType="ResModel.ResourceLink" />
+          <EntitySet Name="ResourceSubGroup" EntityType="ResModel.ResourceSubGroup" />
+          <EntitySet Name="SearchKey" EntityType="ResModel.SearchKey" />
+          <AssociationSet Name="FK_Resource_ResourceSubGroup" Association="ResModel.FK_Resource_ResourceSubGroup">
+            <End Role="ResourceSubGroup" EntitySet="ResourceSubGroup" />
+            <End Role="Resource" EntitySet="Resource" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceClick_Resource" Association="ResModel.FK_ResourceClick_Resource">
+            <End Role="Resource" EntitySet="Resource" />
+            <End Role="ResourceClick" EntitySet="ResourceClick" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceGroupTotalClick_Resource" Association="ResModel.FK_ResourceGroupTotalClick_Resource">
+            <End Role="Resource" EntitySet="Resource" />
+            <End Role="ResourceGroupTotalClick" EntitySet="ResourceGroupTotalClick" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceLink_Resource" Association="ResModel.FK_ResourceLink_Resource">
+            <End Role="Resource" EntitySet="Resource" />
+            <End Role="ResourceLink" EntitySet="ResourceLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceSubGroup_ResourceGroup" Association="ResModel.FK_ResourceSubGroup_ResourceGroup">
+            <End Role="ResourceGroup" EntitySet="ResourceGroup" />
+            <End Role="ResourceSubGroup" EntitySet="ResourceSubGroup" />
+          </AssociationSet>
+          <AssociationSet Name="ResourceSearchKey" Association="ResModel.ResourceSearchKey">
+            <End Role="Resource" EntitySet="Resource" />
+            <End Role="SearchKey" EntitySet="SearchKey" />
+          </AssociationSet>
+          <EntitySet Name="Source" EntityType="ResModel.Source" />
+          <AssociationSet Name="FK_ResourceLink_Source" Association="ResModel.FK_ResourceLink_Source">
+            <End Role="Source" EntitySet="Source" />
+            <End Role="ResourceLink" EntitySet="ResourceLink" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Resource">
+          <Key>
+            <PropertyRef Name="ResourceId" />
+          </Key>
+          <Property Name="ResourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ResourceTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ResourceSubGroupId" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TotalClick" Type="Int32" />
+          <NavigationProperty Name="ResourceSubGroup" Relationship="ResModel.FK_Resource_ResourceSubGroup" FromRole="Resource" ToRole="ResourceSubGroup" />
+          <NavigationProperty Name="ResourceClick" Relationship="ResModel.FK_ResourceClick_Resource" FromRole="Resource" ToRole="ResourceClick" />
+          <NavigationProperty Name="ResourceGroupTotalClick" Relationship="ResModel.FK_ResourceGroupTotalClick_Resource" FromRole="Resource" ToRole="ResourceGroupTotalClick" />
+          <NavigationProperty Name="ResourceLink" Relationship="ResModel.FK_ResourceLink_Resource" FromRole="Resource" ToRole="ResourceLink" />
+          <NavigationProperty Name="SearchKey" Relationship="ResModel.ResourceSearchKey" FromRole="Resource" ToRole="SearchKey" />
+        </EntityType>
+        <EntityType Name="ResourceClick">
+          <Key>
+            <PropertyRef Name="ResouceId" />
+            <PropertyRef Name="ClickDate" />
+          </Key>
+          <Property Name="ResouceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ResourceClick1" Type="Int64" />
+          <Property Name="ClickDate" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Resource" Relationship="ResModel.FK_ResourceClick_Resource" FromRole="ResourceClick" ToRole="Resource" />
+        </EntityType>
+        <EntityType Name="ResourceGroup">
+          <Key>
+            <PropertyRef Name="ResourceGroupId" />
+          </Key>
+          <Property Name="ResourceGroupId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ResourceGroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ResourceSubGroup" Relationship="ResModel.FK_ResourceSubGroup_ResourceGroup" FromRole="ResourceGroup" ToRole="ResourceSubGroup" />
+        </EntityType>
+        <EntityType Name="ResourceGroupTotalClick">
+          <Key>
+            <PropertyRef Name="ResourceId" />
+            <PropertyRef Name="ResourceGoupId" />
+          </Key>
+          <Property Name="ResourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ResourceGoupId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="GroupTotalClick" Type="Int64" />
+          <NavigationProperty Name="Resource" Relationship="ResModel.FK_ResourceGroupTotalClick_Resource" FromRole="ResourceGroupTotalClick" ToRole="Resource" />
+        </EntityType>
+        <EntityType Name="ResourceLink">
+          <Key>
+            <PropertyRef Name="ResourceId" />
+            <PropertyRef Name="SourceId" />
+          </Key>
+          <Property Name="ResourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Link" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ResourceCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Resource" Relationship="ResModel.FK_ResourceLink_Resource" FromRole="ResourceLink" ToRole="Resource" />
+          <NavigationProperty Name="Source" Relationship="ResModel.FK_ResourceLink_Source" FromRole="ResourceLink" ToRole="Source" />
+        </EntityType>
+        <EntityType Name="ResourceSubGroup">
+          <Key>
+            <PropertyRef Name="ResourceSubGroupId" />
+          </Key>
+          <Property Name="ResourceSubGroupId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ResourceGroupId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ResourceSubGroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Resource" Relationship="ResModel.FK_Resource_ResourceSubGroup" FromRole="ResourceSubGroup" ToRole="Resource" />
+          <NavigationProperty Name="ResourceGroup" Relationship="ResModel.FK_ResourceSubGroup_ResourceGroup" FromRole="ResourceSubGroup" ToRole="ResourceGroup" />
+        </EntityType>
+        <EntityType Name="SearchKey">
+          <Key>
+            <PropertyRef Name="SearchKeyId" />
+          </Key>
+          <Property Name="SearchKeyId" Type="Int32" Nullable="false" />
+          <Property Name="SearchKeyText" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Resource" Relationship="ResModel.ResourceSearchKey" FromRole="SearchKey" ToRole="Resource" />
+        </EntityType>
+        <Association Name="FK_Resource_ResourceSubGroup">
+          <End Type="ResModel.ResourceSubGroup" Role="ResourceSubGroup" Multiplicity="0..1" />
+          <End Type="ResModel.Resource" Role="Resource" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceSubGroup">
+              <PropertyRef Name="ResourceSubGroupId" />
+            </Principal>
+            <Dependent Role="Resource">
+              <PropertyRef Name="ResourceSubGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceClick_Resource">
+          <End Type="ResModel.Resource" Role="Resource" Multiplicity="1" />
+          <End Type="ResModel.ResourceClick" Role="ResourceClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Resource">
+              <PropertyRef Name="ResourceId" />
+            </Principal>
+            <Dependent Role="ResourceClick">
+              <PropertyRef Name="ResouceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceGroupTotalClick_Resource">
+          <End Type="ResModel.Resource" Role="Resource" Multiplicity="1" />
+          <End Type="ResModel.ResourceGroupTotalClick" Role="ResourceGroupTotalClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Resource">
+              <PropertyRef Name="ResourceId" />
+            </Principal>
+            <Dependent Role="ResourceGroupTotalClick">
+              <PropertyRef Name="ResourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceLink_Resource">
+          <End Type="ResModel.Resource" Role="Resource" Multiplicity="1" />
+          <End Type="ResModel.ResourceLink" Role="ResourceLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Resource">
+              <PropertyRef Name="ResourceId" />
+            </Principal>
+            <Dependent Role="ResourceLink">
+              <PropertyRef Name="ResourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceSubGroup_ResourceGroup">
+          <End Type="ResModel.ResourceGroup" Role="ResourceGroup" Multiplicity="1" />
+          <End Type="ResModel.ResourceSubGroup" Role="ResourceSubGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceGroup">
+              <PropertyRef Name="ResourceGroupId" />
+            </Principal>
+            <Dependent Role="ResourceSubGroup">
+              <PropertyRef Name="ResourceGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ResourceSearchKey">
+          <End Type="ResModel.Resource" Role="Resource" Multiplicity="*" />
+          <End Type="ResModel.SearchKey" Role="SearchKey" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="SourceId" />
+          </Key>
+          <Property Name="SourceId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Pos" Type="Int32" Nullable="false" />
+          <Property Name="SourceName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="IsPrimary" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="IsDefault" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ResourceLink" Relationship="ResModel.FK_ResourceLink_Source" FromRole="Source" ToRole="ResourceLink" />
+        </EntityType>
+        <Association Name="FK_ResourceLink_Source">
+          <End Type="ResModel.Source" Role="Source" Multiplicity="1" />
+          <End Type="ResModel.ResourceLink" Role="ResourceLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Source">
+              <PropertyRef Name="SourceId" />
+            </Principal>
+            <Dependent Role="ResourceLink">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ResModelStoreContainer" CdmEntityContainer="ResEntities">
+          <EntitySetMapping Name="Resource">
+            <EntityTypeMapping TypeName="ResModel.Resource">
+              <MappingFragment StoreEntitySet="Resource">
+                <ScalarProperty Name="TotalClick" ColumnName="TotalClick" />
+                <ScalarProperty Name="ResourceSubGroupId" ColumnName="ResourceSubGroupId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ResourceTitle" ColumnName="ResourceTitle" />
+                <ScalarProperty Name="ResourceId" ColumnName="ResourceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceClick">
+            <EntityTypeMapping TypeName="ResModel.ResourceClick">
+              <MappingFragment StoreEntitySet="ResourceClick">
+                <ScalarProperty Name="ClickDate" ColumnName="ClickDate" />
+                <ScalarProperty Name="ResourceClick1" ColumnName="ResourceClick" />
+                <ScalarProperty Name="ResouceId" ColumnName="ResouceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceGroup">
+            <EntityTypeMapping TypeName="ResModel.ResourceGroup">
+              <MappingFragment StoreEntitySet="ResourceGroup">
+                <ScalarProperty Name="ResourceGroupName" ColumnName="ResourceGroupName" />
+                <ScalarProperty Name="ResourceGroupId" ColumnName="ResourceGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceGroupTotalClick">
+            <EntityTypeMapping TypeName="ResModel.ResourceGroupTotalClick">
+              <MappingFragment StoreEntitySet="ResourceGroupTotalClick">
+                <ScalarProperty Name="GroupTotalClick" ColumnName="GroupTotalClick" />
+                <ScalarProperty Name="ResourceGoupId" ColumnName="ResourceGoupId" />
+                <ScalarProperty Name="ResourceId" ColumnName="ResourceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceLink">
+            <EntityTypeMapping TypeName="ResModel.ResourceLink">
+              <MappingFragment StoreEntitySet="ResourceLink">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="ResourceCode" ColumnName="ResourceCode" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+                <ScalarProperty Name="ResourceId" ColumnName="ResourceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceSubGroup">
+            <EntityTypeMapping TypeName="ResModel.ResourceSubGroup">
+              <MappingFragment StoreEntitySet="ResourceSubGroup">
+                <ScalarProperty Name="ResourceSubGroupName" ColumnName="ResourceSubGroupName" />
+                <ScalarProperty Name="ResourceGroupId" ColumnName="ResourceGroupId" />
+                <ScalarProperty Name="ResourceSubGroupId" ColumnName="ResourceSubGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchKey">
+            <EntityTypeMapping TypeName="ResModel.SearchKey">
+              <MappingFragment StoreEntitySet="SearchKey">
+                <ScalarProperty Name="SearchKeyText" ColumnName="SearchKeyText" />
+                <ScalarProperty Name="SearchKeyId" ColumnName="SearchKeyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ResourceSearchKey" TypeName="ResModel.ResourceSearchKey" StoreEntitySet="ResourceSearchKey">
+            <EndProperty Name="SearchKey">
+              <ScalarProperty Name="SearchKeyId" ColumnName="SearchKeyId" />
+            </EndProperty>
+            <EndProperty Name="Resource">
+              <ScalarProperty Name="ResourceId" ColumnName="ResourceId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="Source">
+            <EntityTypeMapping TypeName="ResModel.Source">
+              <MappingFragment StoreEntitySet="Source">
+                <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
+                <ScalarProperty Name="IsPrimary" ColumnName="IsPrimary" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SourceName" ColumnName="SourceName" />
+                <ScalarProperty Name="Pos" ColumnName="Pos" />
+                <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
